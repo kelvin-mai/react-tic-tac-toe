@@ -1,6 +1,7 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
-import { HomePage } from '@/pages/home';
+import { Component as HomePage } from '@/pages/home';
+import { authRoutes } from './auth';
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
         path: '/game',
         lazy: () => import('@/pages/game'),
       },
+      authRoutes,
     ],
   },
 ]);

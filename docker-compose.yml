@@ -15,4 +15,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  storage:
+  data:
