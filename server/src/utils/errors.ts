@@ -6,3 +6,4 @@ export const INVALID_CREDENTIALS = Error('Invalid username or password', {
 export const EXISTING_USER = Error('Username already taken', {
   cause: { code: 409 },
 });
+export const WRONG_TURN = Error('Not Your Turn', { cause: { code: 409 } });

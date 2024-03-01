@@ -1,9 +1,9 @@
 import express from 'express';
 import { generateId } from 'lucia';
 
-import { computeCurrentState, db } from '@/lib/db';
+import { gameWithCurrentState, db, computeCurrentState } from '@/lib/db';
 import { ok, created, errorResponse } from '@/utils/response';
-import { CONFLICT, UNAUTHORIZED } from '@/utils/errors';
+import { CONFLICT, UNAUTHORIZED, WRONG_TURN } from '@/utils/errors';
 
 export const gameRouter = express.Router();
 
@@ -52,8 +52,7 @@ gameRouter
           gameStates: true,
         },
       });
-      const currentState = computeCurrentState(game);
-      return ok(res, { game: { ...game, currentState } });
+      return ok(res, { game: gameWithCurrentState(game) });
     } catch (error) {
       return errorResponse(res, error);
     }
@@ -76,10 +75,29 @@ gameRouter
         throw UNAUTHORIZED;
       }
       const currentState = computeCurrentState(game);
+      if (
+        (currentState.turn % 2 === 0 &&
+          game.playerXId !== res.locals.user.id) ||
+        (currentState.turn % 2 !== 0 && game.playerOId !== res.locals.user.id)
+      ) {
+        throw WRONG_TURN;
+      }
+      const move = currentState.turn % 2 === 0 ? 'x' : 'o';
+      console.log({
+        player: res.locals.user.id,
+        currentPlayer: currentState.turn % 2 ? game.playerXId : game.playerOId,
+        move,
+        index: req.body.index,
+        nextState: (currentState.state as string[]).map((v, i) =>
+          i === req.body.index ? move : v,
+        ),
+      });
       const nextState = await db.gameState.create({
         data: {
           turn: currentState.turn + 1,
-          state: req.body.state,
+          state: (currentState.state as string[]).map((v, i) =>
+            i === req.body.index ? move : v,
+          ),
           gameId: game.id,
         },
       });

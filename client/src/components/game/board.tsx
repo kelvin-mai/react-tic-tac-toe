@@ -6,11 +6,6 @@ type GameBoardProps = {
 };
 
 export const GameBoard: FC<GameBoardProps> = ({ gameState, onClick }) => {
-  const handleClick = async (n: number) => {
-    const nextState = gameState.map((v, i) => (i === n ? 'x' : v));
-    onClick(nextState);
-  };
-
   return (
     <div className='flex items-center justify-center'>
       <div className='grid grid-cols-3 gap-2'>
@@ -18,7 +13,7 @@ export const GameBoard: FC<GameBoardProps> = ({ gameState, onClick }) => {
           <div
             key={i}
             className='bg-slate-800 w-[80px] h-[80px] sm:w-[200px] sm:h-[200px] rounded-lg flex items-center justify-center'
-            onClick={() => handleClick(i)}
+            onClick={() => onClick(i)}
           >
             <p className='text-white text-[70px] sm:text-[175px]'>{v}</p>
           </div>

@@ -18,9 +18,9 @@ export const getGame = async (id: string) => {
   }
 };
 
-export const playGame = async (id: string, state: any) => {
+export const playGame = async (id: string, index: number) => {
   try {
-    const { data } = await http.post(`/game/${id}`, { state });
+    const { data } = await http.post(`/game/${id}`, { index });
     return data;
   } catch (e) {
     return catchErrors(e);
