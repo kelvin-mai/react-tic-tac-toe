@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
         Component: HomePage,
       },
       {
-        path: '/game',
+        path: '/game/:id',
         lazy: () => import('@/pages/game'),
       },
       authRoutes,

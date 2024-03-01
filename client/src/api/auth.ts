@@ -1,4 +1,4 @@
-import { http } from '@/lib/http';
+import { catchErrors, http } from '@/lib/http';
 
 export type AuthPayload = {
   username: string;
@@ -6,17 +6,37 @@ export type AuthPayload = {
 };
 
 export const getUser = async () => {
-  return await http.get('/user');
+  try {
+    const { data } = await http.get('/user');
+    return data;
+  } catch (e) {
+    return catchErrors(e);
+  }
 };
 
-export const register = async (data: AuthPayload) => {
-  return await http.post('/register', data);
+export const register = async (payload: AuthPayload) => {
+  try {
+    const { data } = await http.post('/register', payload);
+    return data;
+  } catch (e) {
+    return catchErrors(e);
+  }
 };
 
-export const login = async (data: AuthPayload) => {
-  return await http.post('/login', data);
+export const login = async (payload: AuthPayload) => {
+  try {
+    const { data } = await http.post('/login', payload);
+    return data;
+  } catch (e) {
+    return catchErrors(e);
+  }
 };
 
 export const logout = async () => {
-  return await http.post('/logout', {});
+  try {
+    const { data } = await http.post('/logout', {});
+    return data;
+  } catch (e) {
+    return catchErrors(e);
+  }
 };

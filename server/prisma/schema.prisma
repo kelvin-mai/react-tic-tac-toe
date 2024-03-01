@@ -8,10 +8,12 @@ datasource db {
 }
 
 model User {
-  id       String    @id
-  username String
-  password String
-  sessions Session[]
+  id           String    @id
+  username     String    @unique
+  password     String
+  sessions     Session[]
+  gamesCreated Game[]    @relation("gamesCreated")
+  gamesJoined  Game[]    @relation("gamesJoined")
 
   @@map("users")
 }
@@ -23,4 +25,25 @@ model Session {
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+model Game {
+  id         String      @id
+  playerXId  String      @map("player_x_id")
+  playerOId  String?     @map("player_o_id")
+  playerX    User        @relation(name: "gamesCreated", references: [id], fields: [playerXId])
+  playerO    User?       @relation(name: "gamesJoined", references: [id], fields: [playerOId])
+  gameStates GameState[]
+
+  @@map("games")
+}
+
+model GameState {
+  gameId String @map("game_id")
+  turn   Int
+  state  Json
+  game   Game   @relation(references: [id], fields: [gameId], onDelete: Cascade)
+
+  @@id([gameId, turn])
+  @@map("game_states")
 }

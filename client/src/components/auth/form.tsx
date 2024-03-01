@@ -15,8 +15,17 @@ import {
 } from '@/components/ui';
 
 const schema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(4, 'Username must be at least 4 characters')
+    .max(31, 'Username must be less than 32 characters'),
+  password: z
+    .string()
+    .trim()
+    .min(6, 'Password must be at least 2 characters')
+    .max(255, 'Password must be less than 256 characters'),
 });
 
 export type AuthFormFieldValues = z.infer<typeof schema>;

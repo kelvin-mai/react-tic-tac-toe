@@ -1,7 +1,7 @@
 import { Lucia } from 'lucia';
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 import type { Request, Response, NextFunction } from 'express';
-import type { User } from '@prisma/client';
+import type { Session, User } from '@prisma/client';
 
 import { db } from './db';
 
@@ -53,5 +53,14 @@ declare module 'lucia' {
   interface Register {
     Lucia: typeof auth;
     DatabaseUserAttributes: Omit<User, 'id'>;
+  }
+}
+
+declare global {
+  namespace Express {
+    interface Locals {
+      user: Omit<User, 'password'> | null;
+      session: Session | null;
+    }
   }
 }
