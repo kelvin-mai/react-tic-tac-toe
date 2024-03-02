@@ -29,7 +29,7 @@ async function main() {
       playerXId: player1.id,
       playerOId: player2.id,
       gameStates: {
-        create: [{ turn: 0, state: Array(9).fill(null) }],
+        create: [{ turn: 0, state: Array(9).fill(null), status: 'new' }],
       },
     },
   });

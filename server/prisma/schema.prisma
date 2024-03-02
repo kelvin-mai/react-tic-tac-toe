@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id           String    @id
-  username     String    @unique
+  id           String      @id
+  username     String      @unique
   password     String
   sessions     Session[]
-  gamesCreated Game[]    @relation("gamesCreated")
-  gamesJoined  Game[]    @relation("gamesJoined")
+  gamesCreated Game[]      @relation("gamesCreated")
+  gamesJoined  Game[]      @relation("gamesJoined")
+  gamesWon     GameState[] @relation("gamesWon")
 
   @@map("users")
 }
@@ -39,10 +40,13 @@ model Game {
 }
 
 model GameState {
-  gameId String @map("game_id")
-  turn   Int
-  state  Json
-  game   Game   @relation(references: [id], fields: [gameId], onDelete: Cascade)
+  gameId   String  @map("game_id")
+  winnerId String? @map("winner_id")
+  turn     Int
+  state    Json
+  status   String
+  game     Game    @relation(references: [id], fields: [gameId], onDelete: Cascade)
+  winner   User?   @relation(name: "gamesWon", fields: [winnerId], references: [id])
 
   @@id([gameId, turn])
   @@map("game_states")

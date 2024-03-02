@@ -1,11 +1,27 @@
 import { catchErrors, http } from '@/lib/http';
 
+import { ApiResponse } from './types';
+
 export type AuthPayload = {
   username: string;
   password: string;
 };
 
-export const getUser = async () => {
+export type User = {
+  id: string;
+  username: string;
+};
+
+export type Session = {
+  id: string;
+  userId: string;
+  fresh: boolean;
+  expiresAt: string;
+};
+
+export const getUser = async (): Promise<
+  ApiResponse<{ user: User; session: Session }>
+> => {
   try {
     const { data } = await http.get('/user');
     return data;
@@ -14,7 +30,7 @@ export const getUser = async () => {
   }
 };
 
-export const register = async (payload: AuthPayload) => {
+export const register = async (payload: AuthPayload): Promise<ApiResponse> => {
   try {
     const { data } = await http.post('/register', payload);
     return data;
@@ -23,7 +39,7 @@ export const register = async (payload: AuthPayload) => {
   }
 };
 
-export const login = async (payload: AuthPayload) => {
+export const login = async (payload: AuthPayload): Promise<ApiResponse> => {
   try {
     const { data } = await http.post('/login', payload);
     return data;
@@ -32,7 +48,7 @@ export const login = async (payload: AuthPayload) => {
   }
 };
 
-export const logout = async () => {
+export const logout = async (): Promise<ApiResponse> => {
   try {
     const { data } = await http.post('/logout', {});
     return data;
