@@ -4,7 +4,7 @@ import type { BoardState } from '@/api/game';
 
 type GameBoardProps = {
   state: BoardState;
-  onClick: (state: any) => void | Promise<void>;
+  onClick?: (state: any) => void | Promise<void>;
 };
 
 export const GameBoard: FC<GameBoardProps> = ({ state, onClick }) => {
@@ -15,7 +15,7 @@ export const GameBoard: FC<GameBoardProps> = ({ state, onClick }) => {
           <div
             key={i}
             className='bg-slate-800 w-[80px] h-[80px] sm:w-[200px] sm:h-[200px] rounded-lg flex items-center justify-center'
-            onClick={() => onClick(i)}
+            onClick={() => (onClick ? onClick(i) : {})}
           >
             <p className='text-white text-[70px] sm:text-[175px]'>{v}</p>
           </div>

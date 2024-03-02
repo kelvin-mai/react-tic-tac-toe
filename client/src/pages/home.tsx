@@ -5,6 +5,7 @@ import { type User, getUser, logout } from '@/api/auth';
 import { type Game, type GameWithPlayers, getGames } from '@/api/game';
 import { Button } from '@/components/ui';
 import { JoinCard, Leaderboard, ResumeCard } from '@/components/game';
+import { Player, getTopPlayers } from '@/api/player';
 
 export const Component = () => {
   const [availableGames, setAvailableGames] = useState<GameWithPlayers[]>([]);
@@ -17,9 +18,11 @@ export const Component = () => {
     const available = await getGames('available');
     setAvailableGames(available.games);
     if (user) {
-      const resume = await getGames('mine');
+      const resume = await getGames('resume');
       setResumeGames(resume.games);
     }
+    const top = await getTopPlayers();
+    setPlayers(top.players);
   };
   useEffect(() => {
     init();
@@ -34,9 +37,12 @@ export const Component = () => {
       ) : (
         <Button onClick={logout}>Log out</Button>
       )}
-      <Leaderboard />
+      <h1 className='text-4xl font-bold leading-none tracking-tight text-center mb-4'>
+        Tic Tac Toe
+      </h1>
+      {players && <Leaderboard players={players} />}
       {currentUser && (
-        <div className='grid sm:grid-cols-2 gap-4 pt-8'>
+        <div className='grid sm:grid-cols-2 gap-4 pt-4'>
           <JoinCard games={availableGames} />
           <ResumeCard games={resumeGames} />
         </div>

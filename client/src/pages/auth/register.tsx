@@ -1,14 +1,28 @@
-import { register } from '@/api/auth';
-import { AuthForm, type AuthFormFieldValues } from '@/components/auth/form';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
+import { register } from '@/api/auth';
+import { AuthForm, type AuthFormFieldValues } from '@/components/auth/form';
+import { useToast } from '@/components/ui';
+
 export const Component = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const handleSubmit = async (data: AuthFormFieldValues) => {
     const res = await register(data);
     if (res.success) {
-      navigate('/');
+      if (res.success) {
+        toast({
+          title: 'Login Success',
+        });
+        navigate('/');
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Login error',
+          description: res.error,
+        });
+      }
     }
   };
   return (

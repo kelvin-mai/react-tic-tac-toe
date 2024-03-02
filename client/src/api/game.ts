@@ -9,6 +9,8 @@ export type GameState = {
   gameId: string;
   turn: number;
   state: BoardState;
+  status: 'win' | 'tie' | 'new' | 'ongoing';
+  winner_id?: string;
 };
 
 export type Game = {
@@ -46,7 +48,7 @@ export const createGame = async (): Promise<ApiResponse<{ game: Game }>> => {
 
 export const getGame = async (
   id: string,
-): Promise<ApiResponse<{ game: Game }>> => {
+): Promise<ApiResponse<{ game: GameWithPlayers }>> => {
   try {
     const { data } = await http.get(`/game/${id}`);
     return data;
@@ -58,7 +60,7 @@ export const getGame = async (
 export const playGame = async (
   id: string,
   index: number,
-): Promise<ApiResponse<{ game: Game }>> => {
+): Promise<ApiResponse<{ game: GameWithPlayers }>> => {
   try {
     const { data } = await http.post(`/game/${id}`, { index });
     return data;

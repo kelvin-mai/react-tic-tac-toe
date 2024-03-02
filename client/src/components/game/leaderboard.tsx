@@ -1,3 +1,5 @@
+import type { FC } from 'react';
+
 import {
   Card,
   CardContent,
@@ -12,8 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui';
+import type { Player } from '@/api/player';
 
-export const Leaderboard = () => {
+type LeaderboardProps = {
+  players: Player[];
+};
+
+export const Leaderboard: FC<LeaderboardProps> = ({ players }) => {
   return (
     <Card>
       <CardHeader>
@@ -33,11 +40,17 @@ export const Leaderboard = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className='text-center'>1</TableCell>
-              <TableCell className='text-center'>Player 1</TableCell>
-              <TableCell className='text-center'>22</TableCell>
-            </TableRow>
+            {players.map((p, i) => (
+              <TableRow key={p.id}>
+                <TableCell className='text-center'>{i + 1}</TableCell>
+                <TableCell className='text-center text-indigo-500 font-bold'>
+                  {p.username}
+                </TableCell>
+                <TableCell className='text-center'>
+                  {p._count.gamesWon}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>

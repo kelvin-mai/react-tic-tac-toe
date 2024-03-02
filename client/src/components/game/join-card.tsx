@@ -19,15 +19,15 @@ type JoinCardProps = {
 
 export const JoinCard: FC<JoinCardProps> = ({ games }) => {
   return (
-    <Card className='flex flex-col justify-between'>
+    <Card className='flex flex-col'>
       <CardHeader>
         <CardTitle>Join an available game</CardTitle>
         <CardDescription>
           Games with availability will show up here.
         </CardDescription>
       </CardHeader>
-      <CardContent className='space-y-2'>
-        {games.length > 1 ? (
+      <CardContent className='space-y-2 grow'>
+        {games.length > 0 ? (
           games.map((g) => (
             <div
               key={g.id}
