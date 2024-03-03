@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import { getGame, type GameWithPlayers, joinGame, playGame } from '@/api/game';
 import { ReplayBoard } from '@/components/game/replay-board';
@@ -8,11 +8,18 @@ import { GameBoard } from '@/components/game';
 
 export const Component = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [game, setGame] = useState<GameWithPlayers | undefined>();
 
   const init = async () => {
     const { game } = await getGame(id!);
+    if (
+      game.currentState?.status === 'win' ||
+      game.currentState?.status === 'tie'
+    ) {
+      navigate(`/game/${id}/replay`, { replace: true });
+    }
     setGame(game);
     if (!game.playerOId) {
       const { success } = await joinGame(id!);
@@ -65,11 +72,6 @@ export const Component = () => {
       <h1 className='text-4xl font-bold leading-none tracking-light text-center py-4'>
         Game
       </h1>
-      <h2 className='text-2xl font-bold leading-none tracking-light text-center py-4'>
-        {game && game.playerO
-          ? `${game.playerX.username} vs ${game.playerO.username}`
-          : 'Waiting for another player'}
-      </h2>
       {(game?.currentState?.status === 'new' ||
         game?.currentState?.status === 'ongoing') && (
         <GameBoard state={game.currentState.state} onClick={handleClick} />

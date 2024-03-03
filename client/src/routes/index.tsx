@@ -3,6 +3,7 @@ import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { RootLayout } from '@/components/layouts/root';
 import { Component as HomePage } from '@/pages/home';
 import { authRoutes } from './auth';
+import { gameRoutes } from './game';
 
 export const router = createBrowserRouter([
   {
@@ -17,10 +18,9 @@ export const router = createBrowserRouter([
         Component: HomePage,
       },
       {
-        path: '/game/:id',
-        lazy: () => import('@/pages/game'),
       },
       authRoutes,
+      gameRoutes,
     ],
   },
 ]);

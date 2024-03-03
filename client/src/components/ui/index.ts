@@ -3,6 +3,7 @@ export * from './card';
 export * from './form';
 export * from './input';
 export * from './label';
+export * from './skeleton';
 export * from './table';
 export * from './toaster';
 export * from './toast';
