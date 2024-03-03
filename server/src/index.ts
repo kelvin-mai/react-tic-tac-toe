@@ -1,8 +1,11 @@
 import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import http from 'http';
+
 import { middleware as authMiddleware } from './lib/auth';
 import { router } from './routes';
+import { createSocket } from './socket';
 
 dotenv.config();
 
@@ -22,7 +25,11 @@ app.use(authMiddleware);
 
 app.use('/api', router);
 
-app.listen(port, () =>
+const server = http.createServer(app);
+
+createSocket(server);
+
+server.listen(port, () =>
   console.log(`
 🚀 Server ready at: http://localhost:${port}
 `),

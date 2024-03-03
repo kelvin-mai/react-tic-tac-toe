@@ -11,6 +11,7 @@ import { ok, created, errorResponse } from '@/utils/response';
 import {
   CONFLICT,
   GAME_DONE,
+  GAME_NOT_STARTED,
   INVALID_MOVE,
   UNAUTHORIZED,
   WRONG_TURN,
@@ -116,6 +117,8 @@ gameRouter
         where: { id: req.params.id },
         include: {
           gameStates: true,
+          playerO: true,
+          playerX: true,
         },
       });
       if (
@@ -123,6 +126,9 @@ gameRouter
         game.playerOId !== res.locals.user?.id
       ) {
         throw UNAUTHORIZED;
+      }
+      if (!game.playerOId) {
+        throw GAME_NOT_STARTED;
       }
       const currentState = computeCurrentState(game);
       if (currentState.status === 'win' || currentState.status === 'tie') {

@@ -8,6 +8,8 @@ import { db } from './db';
 import { webcrypto } from 'crypto';
 globalThis.crypto = webcrypto;
 
+export type PublicUser = Omit<User, 'password'>;
+
 const adapter = new PrismaAdapter(db.session, db.user);
 
 export const auth = new Lucia(adapter, {
@@ -52,7 +54,7 @@ export const middleware = async (
 declare module 'lucia' {
   interface Register {
     Lucia: typeof auth;
-    DatabaseUserAttributes: Omit<User, 'id'>;
+    DatabaseUserAttributes: PublicUser;
   }
 }
 

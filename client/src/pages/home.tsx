@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { type User, getUser, logout } from '@/api/auth';
 import { type Game, type GameWithPlayers, getGames } from '@/api/game';
-import { Button } from '@/components/ui';
+import { Button, Skeleton } from '@/components/ui';
 import { JoinCard, Leaderboard, ResumeCard } from '@/components/game';
 import { Player, getTopPlayers } from '@/api/player';
 
@@ -11,9 +11,9 @@ export const Component = () => {
   const [availableGames, setAvailableGames] = useState<GameWithPlayers[]>([]);
   const [resumeGames, setResumeGames] = useState<GameWithPlayers[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [players, setPlayers] = useState<Player[]>();
   const init = async () => {
     const { user } = await getUser();
-    console.log(user);
     setCurrentUser(user);
     const available = await getGames('available');
     setAvailableGames(available.games);
