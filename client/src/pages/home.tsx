@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 
-import { type User, getUser, logout } from '@/api/auth';
-import { type Game, type GameWithPlayers, getGames } from '@/api/game';
-import { Button, Skeleton } from '@/components/ui';
+import { type User, getUser } from '@/api/auth';
+import { type GameWithPlayers, getGames } from '@/api/game';
 import { JoinCard, Leaderboard, ResumeCard } from '@/components/game';
 import { Player, getTopPlayers } from '@/api/player';
 
@@ -29,15 +27,7 @@ export const Component = () => {
   }, []);
   return (
     <main className='container'>
-      <h1>Hello {currentUser ? currentUser.username : 'World'}</h1>
-      {!currentUser ? (
-        <Link to='/auth/login'>
-          <Button>Log in</Button>
-        </Link>
-      ) : (
-        <Button onClick={logout}>Log out</Button>
-      )}
-      <h1 className='text-4xl font-bold leading-none tracking-tight text-center mb-4'>
+      <h1 className='text-4xl font-bold leading-none tracking-tight text-center py-4'>
         Tic Tac Toe
       </h1>
       {players && <Leaderboard players={players} />}

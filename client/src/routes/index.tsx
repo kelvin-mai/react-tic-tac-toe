@@ -17,6 +17,10 @@ export const router = createBrowserRouter([
         index: true,
         Component: HomePage,
       },
+      {
+        path: '/player/:id',
+        lazy: () => import('@/pages/player'),
+      },
       authRoutes,
       gameRoutes,
     ],
