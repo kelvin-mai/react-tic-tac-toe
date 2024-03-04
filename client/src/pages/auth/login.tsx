@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { login } from '@/api/auth';
 import { AuthForm, type AuthFormFieldValues } from '@/components/auth/form';
@@ -7,14 +7,23 @@ import { useToast } from '@/components/ui';
 
 export const Component = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const gameRedirect = searchParams.get('game');
+  const toLink = gameRedirect
+    ? `/auth/register?game=${gameRedirect}`
+    : '/auth/register';
   const handleSubmit = async (data: AuthFormFieldValues) => {
     const res = await login(data);
     if (res.success) {
       toast({
         title: 'Login Success',
       });
-      navigate('/');
+      if (gameRedirect) {
+        navigate(`/game/${gameRedirect}`);
+      } else {
+        navigate('/');
+      }
     } else {
       toast({
         variant: 'destructive',
@@ -31,7 +40,7 @@ export const Component = () => {
           Don't have an account?{' '}
           <Link
             className='font-semibold text-indigo-500 hover:underline'
-            to='/auth/register'
+            to={toLink}
           >
             Register
           </Link>
