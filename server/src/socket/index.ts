@@ -7,6 +7,7 @@ import {
   addSocketUser,
   removeSocketUser,
   joinRoom,
+  roomToUsers,
 } from './state';
 
 const verifySocketCookie = async (
@@ -42,39 +43,33 @@ export const createSocket = (server: ReturnType<typeof createServer>) => {
     socket.on('join_room', async (gameId) => {
       state = joinRoom(state, { socketId: socket.id, room: gameId });
       socket.join(gameId);
+      socket.emit('active_players', roomToUsers(state, gameId));
       if (state[socket.id].user) {
         socket.broadcast.to(gameId).emit('join_room', state[socket.id]);
+        socket.broadcast
+          .to(gameId)
+          .emit('active_players', roomToUsers(state, gameId));
       }
-      console.log(state);
     });
 
     socket.on('join_game', async (gameId) => {
       socket.broadcast.to(gameId).emit('join_game', state[socket.id]);
+      socket.broadcast
+        .to(gameId)
+        .emit('active_players', roomToUsers(state, gameId));
     });
 
     socket.on('play_game', async (gameId) => {
       socket.broadcast.to(gameId).emit('play_game');
     });
 
-    socket.on('leave', async () => {
-      const user = state[socket.id];
-      console.log('user disconnect', user);
-      if (user.room) {
-        console.log('user.room', user.room);
-        socket.broadcast.to(user.room).emit('leave', user);
-      }
-    });
-
     socket.on('disconnect', () => {
       const user = state[socket.id];
-      console.log('user disconnect', user);
-      if (user && user.room) {
-        console.log('user.room', user.room);
-        io.to(user.room).emit('leave', user);
-      }
-
       state = removeSocketUser(state, socket.id);
-      console.log('socket state', state);
+      if (user && user.room) {
+        io.to(user.room).emit('leave', user);
+        io.to(user.room).emit('active_players', roomToUsers(state, user.room));
+      }
     });
   });
 

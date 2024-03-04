@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
+import type { SocketRoomData, SocketUserData } from '@/api/types';
 import { getGame, type GameWithPlayers, joinGame, playGame } from '@/api/game';
+import { getUser } from '@/api/auth';
 import { useToast } from '@/components/ui';
 import { GameBoard, GameInfo } from '@/components/game';
-import { getUser } from '@/api/auth';
 import { useSocket } from '@/hooks/use-socket';
 
 export const Component = () => {
@@ -13,6 +14,7 @@ export const Component = () => {
   const { toast } = useToast();
   const socket = useSocket();
   const [game, setGame] = useState<GameWithPlayers | undefined>();
+  const [activePlayers, setActivePlayers] = useState<string[]>([]);
 
   if (!id) {
     return navigate('/');
@@ -85,7 +87,7 @@ export const Component = () => {
     }
   };
 
-  const onPlayerJoin = (data: any) => {
+  const onPlayerJoin = (data: SocketUserData) => {
     toast({
       title: 'Challenge Accepted',
       description: `${data.user.username} has joined this game.`,
@@ -93,16 +95,14 @@ export const Component = () => {
     refetch();
   };
 
-  const onPlayerConnect = (data: any) => {
-    console.log('join_room', data);
+  const onPlayerConnect = (data: SocketUserData) => {
     toast({
       title: 'Player connected',
       description: `${data.user.username} has connected to this game.`,
     });
   };
 
-  const onPlayerDisconnect = (data: any) => {
-    console.log('leave', data);
+  const onPlayerDisconnect = (data: SocketUserData) => {
     if (
       game?.currentState?.status === 'ongoing' ||
       game?.currentState?.status === 'new'
@@ -115,10 +115,15 @@ export const Component = () => {
     }
   };
 
+  const onActivePlayerChange = (data: SocketRoomData) => {
+    setActivePlayers(data.map((s) => s.user.id));
+  };
+
   useEffect(() => {
     socket.on('join_room', onPlayerConnect);
     socket.on('join_game', onPlayerJoin);
     socket.on('play_game', refetch);
+    socket.on('active_players', onActivePlayerChange);
     socket.on('leave', onPlayerDisconnect);
     init();
     () => {
@@ -148,7 +153,7 @@ export const Component = () => {
       {game && (
         <>
           <GameBoard state={game.currentState!.state} onClick={handleClick} />
-          <GameInfo game={game} />
+          <GameInfo game={game} activePlayers={activePlayers} />
         </>
       )}
     </>

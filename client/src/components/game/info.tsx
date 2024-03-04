@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import { cn } from '@/lib/utils';
 import {
   Card,
   CardContent,
@@ -11,9 +12,41 @@ import type { GameWithPlayers } from '@/api/game';
 
 type GameInfoProps = {
   game: GameWithPlayers;
+  activePlayers: string[];
 };
 
-export const GameInfo: FC<GameInfoProps> = ({ game }) => {
+type PlayerIndicatorProps = {
+  username?: string;
+  online: boolean;
+  move: 'X' | 'O';
+};
+
+const PlayerIndicator: FC<PlayerIndicatorProps> = ({
+  username,
+  online,
+  move,
+}) => {
+  return (
+    <div className='rounded-lg border border-slate-200 bg-white px-4 py-2 flex items-center gap-4'>
+      <div className='relative inline-block'>
+        <div className='w-16 h-16 rounded-full border-2 border-white bg-slate-900 flex items-center justify-center'>
+          <p className='text-white text-4xl text-center'>{move}</p>
+        </div>
+        <div
+          className={cn(
+            'w-4 h-4 rounded-full bg-green-500 border-2 border-white absolute bottom-0.5 right-0.5',
+            online ? 'bg-green-500' : 'bg-slate-500',
+          )}
+        />
+      </div>
+      <p className={cn(username && 'font-bold text-indigo-500')}>
+        {username || 'Waiting for opponent...'}
+      </p>
+    </div>
+  );
+};
+
+export const GameInfo: FC<GameInfoProps> = ({ game, activePlayers }) => {
   const currentTurn = game.playerO ? (game.currentState?.turn || 0) + 1 : 0;
   const currentMove =
     game.currentState && game.currentState.turn % 2 ? 'O' : 'X';
@@ -38,22 +71,18 @@ export const GameInfo: FC<GameInfoProps> = ({ game }) => {
         </div>
         <div className='flex flex-col gap-2'>
           <p className='text-xl bold'>Players</p>
-          <div className='flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2'>
-            <p>
-              <b>X: </b>
-              <b className='text-indigo-500'>{game.playerX.username}</b>
-            </p>
-          </div>
-          <div className='flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2'>
-            <p>
-              <b>O: </b>
-              {game.playerOId ? (
-                <b className='text-indigo-500'>{game.playerO.username}</b>
-              ) : (
-                'Waiting for opponent...'
-              )}
-            </p>
-          </div>
+          <PlayerIndicator
+            username={game.playerX.username}
+            online={activePlayers.includes(game.playerXId)}
+            move='X'
+          />
+          <PlayerIndicator
+            username={game.playerO?.username}
+            online={
+              game.playerOId ? activePlayers.includes(game.playerOId) : false
+            }
+            move='O'
+          />
         </div>
       </CardContent>
       <CardFooter></CardFooter>
