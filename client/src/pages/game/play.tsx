@@ -17,7 +17,7 @@ export const Component = () => {
   const [activePlayers, setActivePlayers] = useState<string[]>([]);
   const { user } = useAuth();
 
-  if (!id) {
+  if (!id || !user) {
     return navigate('/');
   }
 

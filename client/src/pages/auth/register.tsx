@@ -16,7 +16,7 @@ export const Component = () => {
     : '/auth/login';
   const handleSubmit = async (data: AuthFormFieldValues) => {
     const error = await register(data);
-    if (error) {
+    if (!error) {
       toast({
         title: 'Login Success',
       });
