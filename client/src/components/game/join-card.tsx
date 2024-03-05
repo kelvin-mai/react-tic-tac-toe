@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
-import { CreateGameButton } from '.';
+import { CreateGameButton } from './create-game-button';
 
 type JoinCardProps = {
   games: GameWithPlayers[];

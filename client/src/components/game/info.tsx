@@ -1,14 +1,15 @@
 import type { FC } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn, getBaseUrl } from '@/lib/utils';
+import type { GameWithPlayers } from '@/api/game';
 import {
+  Button,
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
+  useToast,
 } from '@/components/ui';
-import type { GameWithPlayers } from '@/api/game';
 
 type GameInfoProps = {
   game: GameWithPlayers;
@@ -47,9 +48,18 @@ const PlayerIndicator: FC<PlayerIndicatorProps> = ({
 };
 
 export const GameInfo: FC<GameInfoProps> = ({ game, activePlayers }) => {
+  const { toast } = useToast();
   const currentTurn = game.playerO ? (game.currentState?.turn || 0) + 1 : 0;
   const currentMove =
     game.currentState && game.currentState.turn % 2 ? 'O' : 'X';
+
+  const gameToClipboard = () => {
+    navigator.clipboard.writeText(`${getBaseUrl()}/game/${game.id}`);
+    toast({
+      title: 'Copy to Clipboard Success',
+      description: `Successfully copied to clipboard. Please send this to someone you would like to challenge.`,
+    });
+  };
 
   return (
     <Card className='mt-4'>
@@ -83,9 +93,11 @@ export const GameInfo: FC<GameInfoProps> = ({ game, activePlayers }) => {
             }
             move='O'
           />
+          {!game.playerOId && (
+            <Button onClick={gameToClipboard}>Copy game to clipboard</Button>
+          )}
         </div>
       </CardContent>
-      <CardFooter></CardFooter>
     </Card>
   );
 };

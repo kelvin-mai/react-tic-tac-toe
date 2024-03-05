@@ -28,14 +28,14 @@ export const Component = () => {
 
   return (
     <>
-      <h1 className='text-4xl font-bold leading-none tracking-light text-center py-4'>
+      <h1 className='text-4xl font-bold leading-none tracking-light text-center pb-4'>
         Replay Game
       </h1>
-      <h2 className='text-2xl font-bold leading-none tracking-light text-center py-4'>
-        {game && game.playerO
-          ? `${game.playerX.username} vs ${game.playerO.username}`
-          : 'Waiting for another player'}
-      </h2>
+      {game && game.playerO && (
+        <h2 className='text-2xl font-bold leading-none tracking-light text-center py-4'>
+          {game.playerX.username} vs {game.playerO.username}
+        </h2>
+      )}
       {game ? (
         <ReplayBoard game={game} />
       ) : (

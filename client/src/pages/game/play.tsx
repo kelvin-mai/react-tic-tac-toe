@@ -3,10 +3,10 @@ import { useNavigate, useParams } from 'react-router';
 
 import type { SocketRoomData, SocketUserData } from '@/api/types';
 import { getGame, type GameWithPlayers, joinGame, playGame } from '@/api/game';
-import { getUser } from '@/api/auth';
+import { useSocket } from '@/hooks/use-socket';
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/components/ui';
 import { GameBoard, GameInfo } from '@/components/game';
-import { useSocket } from '@/hooks/use-socket';
 
 export const Component = () => {
   const { id } = useParams();
@@ -15,6 +15,7 @@ export const Component = () => {
   const socket = useSocket();
   const [game, setGame] = useState<GameWithPlayers | undefined>();
   const [activePlayers, setActivePlayers] = useState<string[]>([]);
+  const { user } = useAuth();
 
   if (!id) {
     return navigate('/');
@@ -27,7 +28,6 @@ export const Component = () => {
 
   const init = async () => {
     const { game } = await getGame(id);
-    const { user } = await getUser();
     socket.emit('join_room', id);
     if (user) {
       if (game && !game.playerOId && game.playerXId !== user.id) {
@@ -147,7 +147,7 @@ export const Component = () => {
 
   return (
     <>
-      <h1 className='text-4xl font-bold leading-none tracking-light text-center py-4'>
+      <h1 className='text-4xl font-bold leading-none tracking-light text-center pb-4'>
         Game
       </h1>
       {game && (

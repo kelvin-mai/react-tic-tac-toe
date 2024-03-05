@@ -36,7 +36,7 @@ export const Component = () => {
 
   return (
     <>
-      <h1 className='text-4xl font-bold leading-none tracking-light text-center py-4'>
+      <h1 className='text-4xl font-bold leading-none tracking-light text-center pb-4'>
         Connecting...
       </h1>
       <div className='flex items-center justify-center'>

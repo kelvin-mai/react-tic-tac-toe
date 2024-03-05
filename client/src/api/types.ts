@@ -13,3 +13,9 @@ export type SocketUserData = {
 };
 
 export type SocketRoomData = SocketUserData[];
+
+export type ServerPagination = {
+  page: number;
+  pageSize: number;
+  total: number;
+};

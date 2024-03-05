@@ -34,7 +34,7 @@ export const ReplayBoard: FC<ReplayBoardProps> = ({ game }) => {
   };
 
   const winner =
-    game.currentState?.winner_id === game.playerX?.username
+    game.currentState?.winnerId === game.playerX?.username
       ? game.playerX.username
       : game.playerO?.username;
   const winnerText = `${winner} won this Game`;

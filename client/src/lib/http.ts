@@ -1,7 +1,9 @@
 import axios, { isAxiosError } from 'axios';
 
+import { getApiUrl } from './utils';
+
 export const http = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: `${getApiUrl()}/api`,
   withCredentials: true,
 });
 

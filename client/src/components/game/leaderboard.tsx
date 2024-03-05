@@ -1,5 +1,7 @@
 import type { FC } from 'react';
+import { Link } from 'react-router-dom';
 
+import type { Player } from '@/api/player';
 import {
   Card,
   CardContent,
@@ -14,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui';
-import type { Player } from '@/api/player';
 
 type LeaderboardProps = {
   players: Player[];
@@ -44,7 +45,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({ players }) => {
               <TableRow key={p.id}>
                 <TableCell className='text-center'>{i + 1}</TableCell>
                 <TableCell className='text-center text-indigo-500 font-bold'>
-                  {p.username}
+                  <Link to={`/player/${p.id}`}>{p.username}</Link>
                 </TableCell>
                 <TableCell className='text-center'>
                   {p._count.gamesWon}

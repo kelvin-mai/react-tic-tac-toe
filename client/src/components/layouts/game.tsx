@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 export const GameLayout: FC<PropsWithChildren> = ({ children }) => {
-  return <main className='container'>{children}</main>;
+  return <main className='container pt-8'>{children}</main>;
 };

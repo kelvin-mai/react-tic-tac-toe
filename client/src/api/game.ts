@@ -10,13 +10,14 @@ export type GameState = {
   turn: number;
   state: BoardState;
   status: 'win' | 'tie' | 'new' | 'ongoing';
-  winner_id?: string;
+  winnerId?: string;
 };
 
 export type Game = {
   id: string;
   playerXId: string;
   playerOId: string | null;
+  createdAt: string;
   currentState?: GameState;
   gameStates?: GameState[];
 };

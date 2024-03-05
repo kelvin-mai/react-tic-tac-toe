@@ -1,8 +1,8 @@
 import { http, catchErrors } from '@/lib/http';
 
-import { ApiResponse } from './types';
-import { User } from './auth';
-import { GameWithPlayers } from './game';
+import type { ApiResponse, ServerPagination } from './types';
+import type { User } from './auth';
+import type { GameWithPlayers } from './game';
 
 export type Player = User & {
   _count: { gamesWon: number };
@@ -10,9 +10,17 @@ export type Player = User & {
 
 export const getPlayer = async (
   id: string,
-): Promise<ApiResponse<{ player: Player; games: GameWithPlayers[] }>> => {
+  page?: number,
+): Promise<
+  ApiResponse<{
+    player: Player;
+    games: GameWithPlayers[];
+    pagination: ServerPagination;
+  }>
+> => {
+  const url = `/player/${id}?${page ? `page=${page}` : ''}`;
   try {
-    const { data } = await http.get(`/player/${id}`);
+    const { data } = await http.get(url);
     return data;
   } catch (e) {
     return catchErrors(e);

@@ -35,6 +35,7 @@ model Game {
   playerX    User        @relation(name: "gamesCreated", references: [id], fields: [playerXId])
   playerO    User?       @relation(name: "gamesJoined", references: [id], fields: [playerOId])
   gameStates GameState[]
+  createdAt  DateTime    @default(now()) @map("created_at")
 
   @@map("games")
 }

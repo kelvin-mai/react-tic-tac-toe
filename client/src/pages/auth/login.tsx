@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { Link, useSearchParams } from 'react-router-dom';
 
-import { login } from '@/api/auth';
+import { useAuth } from '@/hooks/use-auth';
 import { AuthForm, type AuthFormFieldValues } from '@/components/auth/form';
 import { useToast } from '@/components/ui';
 
@@ -9,13 +9,14 @@ export const Component = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { login } = useAuth();
   const gameRedirect = searchParams.get('game');
   const toLink = gameRedirect
     ? `/auth/register?game=${gameRedirect}`
     : '/auth/register';
   const handleSubmit = async (data: AuthFormFieldValues) => {
-    const res = await login(data);
-    if (res.success) {
+    const error = await login(data);
+    if (!error) {
       toast({
         title: 'Login Success',
       });
@@ -28,7 +29,7 @@ export const Component = () => {
       toast({
         variant: 'destructive',
         title: 'Login error',
-        description: res.error,
+        description: error,
       });
     }
   };
